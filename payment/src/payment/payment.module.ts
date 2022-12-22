@@ -2,21 +2,22 @@
 import { Module } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
-//import { SequelizeModule } from '@nestjs/sequelize';
-//import { Order } from './entities/order.entity';
 import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    //SequelizeModule.forFeature([Order]),
     ClientsModule.register([
       {
         name: 'KAFKA_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['localhost:9092'],
+            clientId: 'payment',
+            brokers: ['localhost:9094'],
           },
+          consumer: {
+            groupId: 'payment-consumer'
+          }
         },
       },
     ]),

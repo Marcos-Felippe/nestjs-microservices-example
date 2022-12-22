@@ -2,13 +2,10 @@
 import { Module } from '@nestjs/common';
 import { OrdersService } from './order.service';
 import { OrdersController } from './order.controller';
-//import { SequelizeModule } from '@nestjs/sequelize';
-//import { Order } from './entities/order.entity';
 import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    //SequelizeModule.forFeature([Order]),
     ClientsModule.register([
       {
         name: 'KAFKA_SERVICE',
@@ -16,7 +13,7 @@ import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           client: {
             clientId: 'order',
-            brokers: ['localhost:9092'],
+            brokers: ['localhost:9094'],
           },
           consumer: {
             groupId: 'order-consumer'

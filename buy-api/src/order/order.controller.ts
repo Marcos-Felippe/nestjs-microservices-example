@@ -1,9 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Inject } from '@nestjs/common';
-
 import { OrdersService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-//import { UpdateOrderDto } from './dto/update-order.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { KafkaMessage } from '@nestjs/microservices/external/kafka.interface';
 import { Producer } from 'kafkajs';
@@ -21,21 +18,20 @@ export class OrdersController {
     return 'ok';
   }
 
-  @MessagePattern('topic-payments')
-  consumer(@Payload() message: KafkaMessage) {
-    console.log(message.value);
-  }
-
+  // Producer
   @Post('producer')
   async producer(@Body() body) {
+    console.log(body);
     await this.kafkaProducer.send({
       topic: 'topic-orders',
       messages: [{ key: 'orders', value: JSON.stringify(body) }],
     });
     return 'Mensagem publicada';
   }
-}
-// orders/producer
-//DELETE 400 e 500 - Sucesso
 
-// {success: false}
+  // Consumer
+  @MessagePattern('topic-payments')
+  consumer(@Payload() message: KafkaMessage) {
+    console.log(message.value);
+  }
+}
